@@ -24,6 +24,9 @@ namespace HoopBall
         float endingTime = 0.5f;
         bool isEnding = false;
 
+        float twoHandsTimer = 0;
+        bool isTwoHandsOn = false;
+
         void Awake()
         {
             if (levelUIController == null)
@@ -73,13 +76,26 @@ namespace HoopBall
                 return;
             }
 
-            if (playerScore >= maxGoals)
+            if ((GameProgressStatic.GameRegime == GameRegime.Twohands) && (isTwoHandsOn))
             {
-                EndRound(true);
+                //Debug.Log("here");
+                twoHandsTimer += Time.deltaTime;
+                levelUIController.UpdateChallengeTimer(twoHandsTimer);
+                if ((playerScore >= maxGoals) && (opponentScore >= maxGoals))
+                {
+                    EndRound(true);
+                }
             }
-            if (opponentScore >= maxGoals)
+            else
             {
-                EndRound(false);
+                if (playerScore >= maxGoals)
+                {
+                    EndRound(true);
+                }
+                if (opponentScore >= maxGoals)
+                {
+                    EndRound(false);
+                }
             }
         }
 
@@ -102,9 +118,17 @@ namespace HoopBall
             switch (GameProgressStatic.GameRegime)
             {
                 case GameRegime.SingleNormal:
+                case GameRegime.SingleHard:
+                    isTwoHandsOn = false;
                     inputManager.TurnOn(true);
                     break;
+                case GameRegime.Twohands:
+                    twoHandsTimer = 0;
+                    isTwoHandsOn = true;
+                    inputManager.TurnOn(false);
+                    break;
                 case GameRegime.Hotseat:
+                    isTwoHandsOn = false;
                     inputManager.TurnOn(false);
                     break;
             }
@@ -121,11 +145,19 @@ namespace HoopBall
                 }
                 else
                 {
-                    if (GameProgressStatic.Strike > GameProgressStatic.BestStrike)
+                    if (GameProgressStatic.Strike > GameProgressStatic.StrikeBest)
                     {
-                        GameProgressStatic.BestStrike = GameProgressStatic.Strike;
+                        GameProgressStatic.StrikeBest = GameProgressStatic.Strike;
                     }
                     GameProgressStatic.Strike = 0;
+                }
+            }
+            else if (GameProgressStatic.GameRegime == GameRegime.Twohands)
+            {
+                GameProgressStatic.TwoHandTime = twoHandsTimer;
+                if (GameProgressStatic.TwoHandTime < GameProgressStatic.TwoHandTimeBest)
+                {
+                    GameProgressStatic.TwoHandTimeBest = GameProgressStatic.TwoHandTime;
                 }
             }
             inputManager.TurnOff();

@@ -34,32 +34,39 @@ namespace HoopBall
                 Debug.LogError("Strike Panel does not have StrikeValue TextMeshProUGUI child");
             }
 
-            if ((GameProgressStatic.GameRegime == GameRegime.SingleNormal) || (GameProgressStatic.GameRegime == GameRegime.SingleHard))
+            switch (GameProgressStatic.GameRegime)
             {
-                if (GameProgressStatic.Is1Pwin)
-                {
+                case GameRegime.SingleNormal:
+                case GameRegime.SingleHard:
+                    if (GameProgressStatic.Is1Pwin)
+                    {
+                        winLabel.SetText("WIN!");
+                        strikeValue.SetText(GameProgressStatic.Strike.ToString());
+                    }
+                    else
+                    {
+                        string levelType = GameProgressStatic.GameRegime == GameRegime.SingleNormal ? "NORMAL" : "HARD";
+                        winLabel.SetText("FAILED!");
+                        strikeLabel.SetText("Your best strike (" + levelType + ")");
+                        strikeValue.SetText(GameProgressStatic.StrikeBest.ToString());
+                    }
+                    break;
+                case GameRegime.Hotseat:
+                    if (GameProgressStatic.Is1Pwin)
+                    {
+                        strikeLabel.SetText("1ST PLAYER");
+                    }
+                    else
+                    {
+                        strikeLabel.SetText("2ND PLAYER!");
+                    }
+                    strikeValue.SetText("");
+                    break;
+                case GameRegime.Twohands:
                     winLabel.SetText("WIN!");
-                    strikeValue.SetText(GameProgressStatic.Strike.ToString());
-                }
-                else
-                {
-                    string levelType = GameProgressStatic.GameRegime == GameRegime.SingleNormal ? "NORMAL" : "HARD";
-                    winLabel.SetText("FAILED!");
-                    strikeLabel.SetText("Your best strike (" + levelType + ")");
-                    strikeValue.SetText(GameProgressStatic.BestStrike.ToString());
-                }
-            }
-            else if (GameProgressStatic.GameRegime == GameRegime.Hotseat)
-            {
-                if (GameProgressStatic.Is1Pwin)
-                {
-                    strikeLabel.SetText("1ST PLAYER");
-                }
-                else
-                {
-                    strikeLabel.SetText("2ND PLAYER!");
-                }
-                strikeValue.SetText("");
+                    strikeLabel.SetText("Time is " + GameProgressStatic.TwoHandTime.ToString("F1") + "s");
+                    strikeValue.SetText("Your best " + GameProgressStatic.TwoHandTimeBest.ToString("F1") + "s");
+                    break;
             }
         }
 

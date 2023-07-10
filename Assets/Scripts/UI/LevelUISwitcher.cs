@@ -9,6 +9,7 @@ namespace HoopBall
         [SerializeField] GameObject startMenuPanel;
         [SerializeField] GameObject levelPanel;
         [SerializeField] GameObject secondPlayerButtons;
+        [SerializeField] GameObject challengePanel;
 
         public enum LevelUIState
         {
@@ -30,6 +31,10 @@ namespace HoopBall
             {
                 Debug.LogError("Group with SecondPlayerButtons is not set");
             }
+            if (challengePanel == null)
+            {
+                Debug.LogError("Challenge Panel is not set");
+            }
         }
 
         public void SwitchUI(LevelUIState levelUIState)
@@ -43,9 +48,21 @@ namespace HoopBall
                 case LevelUIState.Level:
                     startMenuPanel.SetActive(false);
                     levelPanel.SetActive(true);
-                    if ((GameProgressStatic.GameRegime == GameRegime.SingleNormal) || (GameProgressStatic.GameRegime == GameRegime.SingleHard))
+                    switch (GameProgressStatic.GameRegime)
                     {
-                        secondPlayerButtons.SetActive(false);
+                        case GameRegime.SingleNormal:
+                        case GameRegime.SingleHard:
+                            secondPlayerButtons.SetActive(false);
+                            challengePanel.SetActive(false);
+                            break;
+                        case GameRegime.Twohands:
+                            secondPlayerButtons.SetActive(true);
+                            challengePanel.SetActive(true);
+                            break;
+                        case GameRegime.Hotseat:
+                            secondPlayerButtons.SetActive(true);
+                            challengePanel.SetActive(false);
+                            break;
                     }
                     break;
             }

@@ -10,6 +10,7 @@ namespace HoopBall
     {
         [SerializeField] TextMeshProUGUI playerScoreLabel;
         [SerializeField] TextMeshProUGUI opponentScoreLabel;
+        [SerializeField] TextMeshProUGUI challengeTimerLabel;
 
         GameManager gameManager;
         LevelUISwitcher levelUISwitcher;
@@ -28,27 +29,26 @@ namespace HoopBall
             if (!isInit)
             {
                 Debug.LogError("Level UI Controller hasn't being initialized");
-                return;
             }
             if (levelUISwitcher == null)
             {
                 Debug.LogError("Level UI Switcher is not set");
-                return;
             }
             if (gameManager == null)
             {
                 Debug.LogError("Game Manager is not set");
-                return;
+            }
+            if (challengeTimerLabel == null)
+            {
+                Debug.LogError("Challenge Timer Label is not set");
             }
             if (playerScoreLabel == null)
             {
                 Debug.LogWarning("Player score label is not set");
-                return;
             }
             if (opponentScoreLabel == null)
             {
                 Debug.LogWarning("Opponent score label is not set");
-                return;
             }
         }
 
@@ -78,6 +78,13 @@ namespace HoopBall
             //gameManager.SwitchToLevel(); called from Go label animation
         }
 
+        public void SwitchToLevelUI1PTwohands()
+        {
+            GameProgressStatic.GameRegime = GameRegime.Twohands;
+            levelUISwitcher.SwitchUI(LevelUISwitcher.LevelUIState.Level);
+            //gameManager.SwitchToLevel(); called from Go label animation
+        }
+
         public void ChangeScore(PlayerType playerType, int number)
         {
             if (playerType == PlayerType.Player)
@@ -88,6 +95,11 @@ namespace HoopBall
             {
                 opponentScoreLabel.SetText(number.ToString());
             }
+        }
+
+        public void UpdateChallengeTimer(float timer)
+        {
+            challengeTimerLabel.SetText(timer.ToString("F1"));
         }
     }
 }
