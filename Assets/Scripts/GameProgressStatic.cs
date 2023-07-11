@@ -13,8 +13,11 @@
         public static bool Is1Pwin = true;
         public static int Strike = 0;
         public static int StrikeBest = 0;
+        public static int StrikeBestHard = 0;
         public static bool ContinueGame = false;
         public static float TwoHandTime = 0;
         public static float TwoHandTimeBest = 10000000f;
+        public static int Player1Wins = 0;
+        public static int Player2Wins = 0;
     }
 }

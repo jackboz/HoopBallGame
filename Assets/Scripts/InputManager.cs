@@ -28,6 +28,14 @@ namespace HoopBall
             {
                 _AIagent.IsOn = true;
                 _AIagent.SetInputController(this);
+                if (GameProgressStatic.GameRegime == GameRegime.SingleNormal)
+                {
+                    _AIagent.IncorrectProbability = 0.4f;
+                }
+                else if (GameProgressStatic.GameRegime == GameRegime.SingleHard)
+                {
+                    _AIagent.IncorrectProbability = 0.15f;
+                }
             }
         }
         public void TurnOff()

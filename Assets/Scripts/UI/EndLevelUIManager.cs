@@ -48,7 +48,8 @@ namespace HoopBall
                         string levelType = GameProgressStatic.GameRegime == GameRegime.SingleNormal ? "NORMAL" : "HARD";
                         winLabel.SetText("FAILED!");
                         strikeLabel.SetText("Your best strike (" + levelType + ")");
-                        strikeValue.SetText(GameProgressStatic.StrikeBest.ToString());
+                        int bestStrike = GameProgressStatic.GameRegime == GameRegime.SingleNormal ? GameProgressStatic.StrikeBest : GameProgressStatic.StrikeBestHard;
+                        strikeValue.SetText(bestStrike.ToString());
                     }
                     break;
                 case GameRegime.Hotseat:
@@ -60,7 +61,7 @@ namespace HoopBall
                     {
                         strikeLabel.SetText("2ND PLAYER!");
                     }
-                    strikeValue.SetText("");
+                    strikeValue.SetText(GameProgressStatic.Player1Wins.ToString() + ":" + GameProgressStatic.Player2Wins.ToString());
                     break;
                 case GameRegime.Twohands:
                     winLabel.SetText("WIN!");
@@ -78,6 +79,14 @@ namespace HoopBall
 
         public void RestartGame()
         {
+            if ((GameProgressStatic.GameRegime == GameRegime.SingleNormal) && (GameProgressStatic.Strike > GameProgressStatic.StrikeBest))
+            {
+                GameProgressStatic.StrikeBest = GameProgressStatic.Strike;
+            }
+            if ((GameProgressStatic.GameRegime == GameRegime.SingleHard) && (GameProgressStatic.Strike > GameProgressStatic.StrikeBestHard))
+            {
+                GameProgressStatic.StrikeBestHard = GameProgressStatic.Strike;
+            }
             GameProgressStatic.Strike = 0;
             GameProgressStatic.ContinueGame = false;
             SceneManager.LoadScene("Level");

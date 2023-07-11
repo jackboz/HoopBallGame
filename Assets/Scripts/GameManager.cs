@@ -50,11 +50,16 @@ namespace HoopBall
                 switch (GameProgressStatic.GameRegime)
                 {
                     case GameRegime.SingleNormal:
-                    case GameRegime.SingleHard:
                         levelUIController.SwitchToLevelUI1P();
+                        break;
+                    case GameRegime.SingleHard:
+                        levelUIController.SwitchToLevelUI1PHard();
                         break;
                     case GameRegime.Hotseat:
                         levelUIController.SwitchToLevelUI2P();
+                        break;
+                    case GameRegime.Twohands:
+                        levelUIController.SwitchToLevelUI1PTwohands();
                         break;
                 }
             }
@@ -128,6 +133,11 @@ namespace HoopBall
                     inputManager.TurnOn(false);
                     break;
                 case GameRegime.Hotseat:
+                    if (!GameProgressStatic.ContinueGame)
+                    {
+                        GameProgressStatic.Player1Wins = 0;
+                        GameProgressStatic.Player2Wins = 0;
+                    }
                     isTwoHandsOn = false;
                     inputManager.TurnOn(false);
                     break;
@@ -145,9 +155,13 @@ namespace HoopBall
                 }
                 else
                 {
-                    if (GameProgressStatic.Strike > GameProgressStatic.StrikeBest)
+                    if ((GameProgressStatic.GameRegime == GameRegime.SingleNormal) && (GameProgressStatic.Strike > GameProgressStatic.StrikeBest))
                     {
                         GameProgressStatic.StrikeBest = GameProgressStatic.Strike;
+                    }
+                    if ((GameProgressStatic.GameRegime == GameRegime.SingleHard) && (GameProgressStatic.Strike > GameProgressStatic.StrikeBestHard))
+                    {
+                        GameProgressStatic.StrikeBestHard = GameProgressStatic.Strike;
                     }
                     GameProgressStatic.Strike = 0;
                 }
@@ -158,6 +172,17 @@ namespace HoopBall
                 if (GameProgressStatic.TwoHandTime < GameProgressStatic.TwoHandTimeBest)
                 {
                     GameProgressStatic.TwoHandTimeBest = GameProgressStatic.TwoHandTime;
+                }
+            }
+            else
+            {
+                if (GameProgressStatic.Is1Pwin)
+                {
+                    GameProgressStatic.Player1Wins += 1;
+                }
+                else
+                {
+                    GameProgressStatic.Player2Wins += 1;
                 }
             }
             inputManager.TurnOff();
